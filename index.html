@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="./style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>Board de Tarefas</title>
+</head>
+<body>
+    
+
+  <main>
+    <section class="tasks-box">
+      <header>
+        <h1>Board de Tarefas</h1>
+      </header>
+      <form id="create-task-form" class="tasks-form">
+        <input
+          class="input-desc"
+          type="text"
+          id="desc"
+          placeholder="Adicionar uma tarefa"
+          aria-label="Nome da tarefa"
+          required
+        />
+
+        <input
+          class="input-desc"
+          type="text"
+          id="tag"
+          placeholder="Etiqueta"
+          aria-label="Etiqueta da tarefa"
+        />
+
+        <button type="submit" class="add-task-btn">
+          Adicionar
+        </button>
+      </form>
+
+      <section class="tasks-content">
+        <ul id="tasks-list"></ul>
+      </section>
+
+    </section>
+  </main>
+  <script src="./index.js"></script>
+</body>
+</html>
