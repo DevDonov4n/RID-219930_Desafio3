@@ -98,6 +98,9 @@ const createTaskElement = (task) => {
   taskName.textContent = task.name;
   if (task.checked) taskName.classList.add('task-done');
 
+  const taskTag = document.createElement('p');
+  taskTag.textContent = task.tag;
+
   const taskDate = document.createElement('small');
   taskDate.textContent = `Criada em: ${task.createdAt}`;
 
