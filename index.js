@@ -90,26 +90,30 @@ const getCurrentDate = () => {
  * @returns {HTMLLIElement}
  */
 const createTaskElement = (task) => {
-  const listItem = document.createElement('li');
-  listItem.id = task.id;
-  listItem.className = 'task-item';
+  const li = document.createElement('li');
+  li.className = 'task-item';
 
-  const taskName = document.createElement('span');
+  const taskInfo = document.createElement('div');
+  taskInfo.className = 'task-info';
+
+  const taskName = document.createElement('h3');
   taskName.textContent = task.name;
-  if (task.checked) taskName.classList.add('task-done');
 
-  const taskTag = document.createElement('p');
-  taskTag.textContent = task.tag;
+  const taskTag = document.createElement('span');
+  taskTag.className = 'task-tag';
+  taskTag.textContent = task.tag || 'frontend';
 
   const taskDate = document.createElement('small');
-  taskDate.textContent = `Criada em: ${task.createdAt}`;
+  taskDate.className = 'task-date';
+  taskDate.textContent = `Criado em: ${task.createdAt}`;
 
-  const finishButton = document.createElement('button');
-  finishButton.textContent = task.checked ? 'Desmarcar' : 'Concluir';
-  finishButton.onclick = () => toggleTaskStatus(task.id);
+  taskInfo.append(taskName, taskTag, taskDate);
 
-  listItem.append(taskName, taskDate, finishButton);
-  return listItem;
+  const button = document.createElement('button');
+  button.textContent = 'Concluir';
+
+  li.append(taskInfo, button);
+  return li;
 };
 
 /* =========================================================
@@ -162,6 +166,19 @@ const addTask = (name, tag) => {
 };
 
 /**
+ * Remove todas as tarefas marcadas como concluídas
+ */
+const removeCompletedTasks = () => {
+  const tasks = loadTasksFromLocalStorage();
+
+  const activeTasks = tasks.filter(task => !task.checked);
+
+  saveTasksInLocalStorage(activeTasks);
+  renderTasks();
+};
+
+
+/**
  * Alterna o estado de conclusão da tarefa.
  * @param {number} taskId
  */
@@ -210,6 +227,9 @@ const handleCreateTask = (event) => {
 window.onload = () => {
   const form = document.getElementById('create-task-form');
   form.addEventListener('submit', handleCreateTask);
+
+  const removeCompletedBtn = document.getElementById('remove-completed-btn');
+  removeCompletedBtn = addEventListener('click', removeCompletedTasks());
 
   // Inicializa o LocalStorage caso esteja vazio
   if (!localStorage.getItem('tasks')) {
