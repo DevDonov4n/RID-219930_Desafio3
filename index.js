@@ -1,39 +1,20 @@
 /**
  * =========================================================
- * BOARD DE TAREFAS — DOCUMENTAÇÃO COMPLETA
+ * BOARD DE TAREFAS — CÓDIGO FINAL
  * =========================================================
- *
- * Esta aplicação implementa um Board de Tarefas (To-Do List)
- * utilizando JavaScript puro, HTML semântico e LocalStorage.
- *
  * Funcionalidades:
- * - Carregar tarefas ao abrir a página
- * - Adicionar novas tarefas
- * - Marcar / desmarcar tarefas como concluídas
- * - Atualizar estado das tarefas
- * - Exibir nome, data de criação e botão de conclusão
- *
- * Tecnologias:
- * - JavaScript (ES6+)
- * - Manipulação do DOM
- * - LocalStorage
+ * - Criar tarefas
+ * - Concluir / desfazer conclusão
+ * - Persistência no LocalStorage
+ * - Contador de tarefas concluídas
+ * - Animações visuais
  */
 
 /* =========================================================
- * ESTADO INICIAL DA APLICAÇÃO
- * =========================================================
- *
- * Estrutura de uma tarefa:
- * {
- *   id: number,
- *   name: string,
- *   tag: string,
- *   createdAt: string,
- *   checked: boolean
- * }
- */
+ * ESTADO INICIAL
+ * ========================================================= */
 
-let initialTasks = [
+const initialTasks = [
   {
     id: 1,
     name: 'Tarefa Exemplar',
@@ -44,112 +25,102 @@ let initialTasks = [
 ];
 
 /* =========================================================
- * LOCAL STORAGE — PERSISTÊNCIA DE DADOS
- * =========================================================
- */
+ * LOCAL STORAGE
+ * ========================================================= */
 
-/**
- * Salva as tarefas no LocalStorage.
- * @param {Array<Object>} tasks
- */
 const saveTasksInLocalStorage = (tasks) => {
   localStorage.setItem('tasks', JSON.stringify(tasks));
 };
 
-/**
- * Recupera as tarefas do LocalStorage.
- * @returns {Array<Object>}
- */
 const loadTasksFromLocalStorage = () => {
   return JSON.parse(localStorage.getItem('tasks')) || [];
 };
 
 /* =========================================================
  * UTILITÁRIOS
- * =========================================================
- */
+ * ========================================================= */
 
-/**
- * Retorna a data atual formatada (pt-BR).
- * @returns {string}
- */
 const getCurrentDate = () => {
   return new Date().toLocaleDateString('pt-BR');
 };
 
 /* =========================================================
- * CRIAÇÃO DE ELEMENTOS VISUAIS (DOM)
- * =========================================================
- */
+ * CONTADOR
+ * ========================================================= */
 
-/**
- * Cria o elemento visual de uma tarefa.
- * Responsabilidade única: criar o HTML da tarefa.
- *
- * @param {Object} task
- * @returns {HTMLLIElement}
- */
+const updateTasksCounter = () => {
+  const tasks = loadTasksFromLocalStorage();
+  const completed = tasks.filter(task => task.checked).length;
+
+  const counter = document.getElementById('tasks-counter');
+  if (!counter) return;
+
+  counter.textContent =
+    completed === 1
+      ? '1 tarefa concluída'
+      : `${completed} tarefas concluídas`;
+};
+
+/* =========================================================
+ * DOM — CRIAÇÃO DE TAREFA
+ * ========================================================= */
+
 const createTaskElement = (task) => {
   const li = document.createElement('li');
   li.className = 'task-item';
 
-  const taskInfo = document.createElement('div');
-  taskInfo.className = 'task-info';
+  if (task.checked) {
+    li.classList.add('completed');
+  }
 
-  const taskName = document.createElement('h3');
-  taskName.textContent = task.name;
+  const info = document.createElement('div');
+  info.className = 'task-info';
 
-  const taskTag = document.createElement('span');
-  taskTag.className = 'task-tag';
-  taskTag.textContent = task.tag || 'frontend';
+  const title = document.createElement('h3');
+  title.textContent = task.name;
 
-  const taskDate = document.createElement('small');
-  taskDate.className = 'task-date';
-  taskDate.textContent = `Criado em: ${task.createdAt}`;
+  const tag = document.createElement('span');
+  tag.className = 'task-tag';
+  tag.textContent = task.tag;
 
-  taskInfo.append(taskName, taskTag, taskDate);
+  const date = document.createElement('small');
+  date.textContent = `Criado em: ${task.createdAt}`;
+
+  info.append(title, tag, date);
 
   const button = document.createElement('button');
-  button.textContent = 'Concluir';
+  button.textContent = task.checked ? 'Concluído' : 'Concluir';
 
-  li.append(taskInfo, button);
+  button.addEventListener('click', () => {
+    toggleTaskStatus(task.id);
+  });
+
+  li.append(info, button);
   return li;
 };
 
 /* =========================================================
  * RENDERIZAÇÃO
- * =========================================================
- */
+ * ========================================================= */
 
-/**
- * Renderiza todas as tarefas na tela.
- */
 const renderTasks = () => {
-  const tasksList = document.getElementById('tasks-list');
+  const list = document.getElementById('tasks-list');
+  if (!list) return;
 
-  if (!tasksList) {
-    console.error('Elemento #tasks-list não encontrado no DOM');
-    return;
-  }
-
-  tasksList.innerHTML = '';
+  list.innerHTML = '';
 
   const tasks = loadTasksFromLocalStorage();
   tasks.forEach(task => {
-    tasksList.appendChild(createTaskElement(task));
+    list.appendChild(createTaskElement(task));
   });
+
+  updateTasksCounter();
 };
 
 /* =========================================================
- * REGRAS DE NEGÓCIO (TASKS)
- * =========================================================
- */
+ * REGRAS DE NEGÓCIO
+ * ========================================================= */
 
-/**
- * Adiciona uma nova tarefa.
- * @param {string} name
- * @param {string} tag
- */
 const addTask = (name, tag) => {
   const tasks = loadTasksFromLocalStorage();
 
@@ -165,73 +136,56 @@ const addTask = (name, tag) => {
   renderTasks();
 };
 
-/**
- * Remove todas as tarefas marcadas como concluídas
- */
-const removeCompletedTasks = () => {
+const toggleTaskStatus = (taskId) => {
   const tasks = loadTasksFromLocalStorage();
 
+  const updated = tasks.map(task =>
+    task.id === taskId
+      ? { ...task, checked: !task.checked }
+      : task
+  );
+
+  saveTasksInLocalStorage(updated);
+  renderTasks();
+};
+
+const removeCompletedTasks = () => {
+  const tasks = loadTasksFromLocalStorage();
   const activeTasks = tasks.filter(task => !task.checked);
 
   saveTasksInLocalStorage(activeTasks);
   renderTasks();
 };
 
-
-/**
- * Alterna o estado de conclusão da tarefa.
- * @param {number} taskId
- */
-const toggleTaskStatus = (taskId) => {
-  const tasks = loadTasksFromLocalStorage();
-
-  const updatedTasks = tasks.map(task =>
-    task.id === taskId
-      ? { ...task, checked: !task.checked }
-      : task
-  );
-
-  saveTasksInLocalStorage(updatedTasks);
-  renderTasks();
-};
-
 /* =========================================================
  * EVENTOS
- * =========================================================
- */
+ * ========================================================= */
 
-/**
- * Handler do formulário de criação de tarefas.
- * @param {Event} event
- */
 const handleCreateTask = (event) => {
   event.preventDefault();
 
-  const taskNameInput = event.target.querySelector('#desc');
-  const taskTagInput = event.target.querySelector('#tag');
+  const nameInput = event.target.querySelector('#desc');
+  const tagInput = event.target.querySelector('#tag');
 
-  const taskName = taskNameInput.value;
-  const taskTag = taskTagInput.value;
+  if (!nameInput.value.trim()) return;
 
-  if (!taskName.trim()) return;
-
-  addTask(taskName, taskTag);
+  addTask(nameInput.value, tagInput.value);
   event.target.reset();
 };
 
 /* =========================================================
- * INICIALIZAÇÃO DA APLICAÇÃO
- * =========================================================
- */
+ * INICIALIZAÇÃO
+ * ========================================================= */
 
 window.onload = () => {
   const form = document.getElementById('create-task-form');
   form.addEventListener('submit', handleCreateTask);
 
-  const removeCompletedBtn = document.getElementById('remove-completed-btn');
-  removeCompletedBtn = addEventListener('click', removeCompletedTasks());
+  const removeBtn = document.getElementById('remove-completed-btn');
+  if (removeBtn) {
+    removeBtn.addEventListener('click', removeCompletedTasks);
+  }
 
-  // Inicializa o LocalStorage caso esteja vazio
   if (!localStorage.getItem('tasks')) {
     saveTasksInLocalStorage(initialTasks);
   }
