@@ -71,23 +71,50 @@ header h1 {
 }
 
 .task-tag {
-  font-size: 0.75rem;
-  color: #2D70FD;
-  background-color: #EEF2FF;
-  padding: 0.2rem 0.6rem;
-  border-radius: 12px;
-  width: fit-content;
+ padding: 0.15rem 0.6rem;
+  border-radius: 999px;
+  border: 1px solid #cfd6eb;
+  font-size: 0.7rem;
+  color: #5a6b91;
 }
 
 .task-item {
-  display: flex;
+   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #fff;
-  padding: 1rem 1.2rem;
+
+  padding: 1.2rem 1.6rem;
   border-radius: 12px;
-  margin-bottom: 1rem;
+  border: 1px solid #eef1f7;
+  background-color: #fff;
+
+  transition: all 0.3s ease;
   box-shadow: rgba(0, 0, 0, 0.05) 0px 4px 12px;
+
+  &:hover{
+    box-shadow: rgba(100, 100, 111, 0.15) 0px 6px 20px;
+    transform: translateY(-2px);
+  }
+
+  & > button {
+    
+    height: 2.4rem;
+    padding: 0 1.2rem;
+    border-radius: 8px;
+    border: none;
+
+    background-color: #2D70FD;
+    color: #fff;
+    font-size: 0.8rem;
+    cursor: pointer;
+
+    transition: all 0.3s ease;
+
+    & :hover{
+      opacity: 0.85;
+    }
+
+  }
 }
 
 .task-date {
@@ -121,6 +148,29 @@ header h1 {
   border-radius: 8px;
   cursor: pointer;
   transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+/* ===== Conteúdo ===== */
+.task-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.task-content h3 {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #0b1a4a;
+}
+
+
+/* ===== Linha inferior ===== */
+.task-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.75rem;
+  color: #8a94b8;
 }
 
 .add-task-btn:hover {
@@ -207,6 +257,19 @@ header h1 {
 .task-item.completed h3 {
   text-decoration: line-through;
   color: #a0a8bf;
+}
+
+.task-item.completed button {
+  background-color: #16c79a;
+}
+
+/* ===== Estado concluído ===== */
+.task-item.completed {
+  opacity: 0.6;
+}
+
+.task-item.completed h3 {
+  text-decoration: line-through;
 }
 
 .task-item.completed button {
