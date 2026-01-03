@@ -9,17 +9,25 @@
 
 body {
   background-color: #f4f6fb;
-  min-height: 100vh;
-  padding: 1rem;
+  min-height: 100svh;
+
   display: flex;
   justify-content: center;
+  align-items: center;
 }
+main{
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 1rem;
+}
+
 
 /* ===== Container ===== */
 .tasks-box {
   background-color: #fff;
   width: 100%;
-  max-width: 660px;
+  max-width: 520px;
   padding: 1.5rem;
   border-radius: 12px;
   border: 1px solid #cfd6eb;
