@@ -38,7 +38,7 @@ Desenvolver uma aplicação front-end que permita:
 - Centralização correta da aplicação em qualquer tamanho de tela
 - Uso de `100svh` para evitar bugs de viewport no mobile
 - Board com largura máxima controlada
-- Lista de tarefas com rolagem interna
+
 
 ---
 
@@ -76,6 +76,7 @@ Desenvolver uma aplicação front-end que permita:
 
 - Boas práticas de responsividade
 
+---
 
 ## 👨‍💻 Autor
 Projeto desenvolvido por Donovan Bueno
