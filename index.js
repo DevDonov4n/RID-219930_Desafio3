@@ -42,7 +42,7 @@ const initialTasks = [
   {
     id: 1,
     name: 'Tarefa Exemplar',
-    tag: 'front-end',
+    tag: 'Etiqueta Exemplar',
     createdAt: '01/08/2025',
     checked: true
   }
@@ -146,7 +146,7 @@ const createTaskElement = (task) => {
 
   const tag = document.createElement('span');
   tag.className = 'task-tag';
-  tag.textContent = task.tag || 'frontend';
+  tag.textContent = task.tag || 'Sem Etiqueta';
 
   const date = document.createElement('span');
   date.className = 'task-date';
@@ -157,11 +157,28 @@ const createTaskElement = (task) => {
 
   /* Botão de ação */
   const button = document.createElement('button');
-  button.textContent = task.checked ? 'Concluído' : 'Concluir';
+  button.className = 'task-complete-btn';
+
+  const span = document.createElement('span');
+  span.textContent = task.checked ? '✓' : 'Concluir';
+
+  button.appendChild(span);
+
 
   button.addEventListener('click', () => {
-    toggleTaskStatus(task.id);
-  });
+    // Se a tarefa JÁ está concluída → apenas desfaz
+    if (task.checked) {
+      toggleTaskStatus(task.id);
+      return;
+    }
+
+    // Se NÃO está concluída → anima antes de concluir
+    button.classList.add('is-animating');
+
+    setTimeout(() => {
+      toggleTaskStatus(task.id);
+    }, 1000);
+    });
 
   li.append(content, button);
   return li;

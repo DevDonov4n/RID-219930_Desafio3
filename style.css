@@ -3,7 +3,7 @@
 * {
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
+  
   font-family: "Rubik", sans-serif;
 }
 
@@ -219,14 +219,14 @@ header h1 {
   }
 
   .tasks-form {
-    display: grid;
-    grid-template-columns: 1fr auto;
-    gap: 0.6rem;
+    display: flex;
+    flex-direction: row ;
     align-items: center;
   }
 
   .add-task-btn {
     height: 2.8rem;
+    width: 2.9rem;
     font-size: 1.2rem;
   }
 
@@ -240,3 +240,97 @@ header h1 {
     align-self: center;
   }
 }
+
+/* ===== Animações ===== */
+@keyframes btn-extend {
+  0% {
+    transform: scale(1);
+    border-radius: 8px;
+  }
+
+  40% {
+    transform: scale(1.1);
+    background-color: #fff;
+    color: #16c79a;
+  }
+
+  100% {
+    transform: scale(1);
+    border-radius: 50%;
+    background-color: #16c79a;
+    color: #fff;
+  }
+}
+
+
+@keyframes btn-text-disappear {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes btn-check-appear {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.4);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+
+/* ===== Botão concluir ===== */
+.task-complete-btn {
+  position: relative;
+  overflow: hidden;
+
+  
+  border-radius: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Texto */
+.task-complete-btn span {
+  transition: opacity 0.3s;
+}
+
+/* Ícone check */
+.task-complete-btn::after {
+  content: "✓";
+  position: absolute;
+
+  width: 1.5rem;
+  height: 1.5rem;
+
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.5);
+
+  font-size: 1rem;
+  font-weight: bold;
+  opacity: 0;
+}
+
+
+/* Estado animando */
+.task-complete-btn.is-animating {
+  animation: btn-extend 0.6s ease forwards;
+}
+
+.task-complete-btn.is-animating span {
+  animation: btn-text-disappear 0.4s forwards;
+}
+
+.task-complete-btn.is-animating::after {
+  animation: btn-check-appear 0.4s ease forwards;
+}
+
+
